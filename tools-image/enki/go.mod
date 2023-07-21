@@ -6,7 +6,7 @@ require (
 	github.com/kairos-io/kairos-agent/v2 v2.1.11-0.20230713071318-9a16b94e2af6
 	github.com/kairos-io/kairos-sdk v0.0.9-0.20230719194412-fe26d1de9166
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/onsi/ginkgo/v2 v2.9.7
+	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.8
 	github.com/sanity-io/litter v1.5.5
 	github.com/sirupsen/logrus v1.9.3
@@ -136,7 +136,7 @@ require (
 	golang.org/x/term v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.9.1 // indirect
+	golang.org/x/tools v0.9.3 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
 	google.golang.org/grpc v1.55.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
