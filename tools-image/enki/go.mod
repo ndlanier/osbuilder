@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/kairos-io/kairos-agent/v2 v2.1.11-0.20230713071318-9a16b94e2af6
-	github.com/kairos-io/kairos-sdk v0.0.9-0.20230719194412-fe26d1de9166
+	github.com/kairos-io/kairos-sdk v0.0.12
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/onsi/ginkgo/v2 v2.9.7
 	github.com/onsi/gomega v1.27.8
