@@ -21,7 +21,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	osbuilder "github.com/ndlanier/osbuilder/api/v1alpha3"
+	osbuilder "github.com/ndlanier/osbuilder/tree/add_resource_limits_to_osbuilder_images/api/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -319,11 +319,11 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 	}
 
 	if artifact.Spec.Resources.Requests.cpu {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.cpu)
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.cpu)
 	}
 
 	if artifact.Spec.Resources.Requests.memory {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.memory)
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.memory)
 	}
 
 	for i, bundle := range artifact.Spec.Bundles {

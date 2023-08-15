@@ -31,8 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	buildv1alpha3 "github.com/ndlanier/osbuilder/api/v1alpha3"
-	"github.com/kairos-io/osbuilder/controllers"
+	buildv1alpha3 "github.com/ndlanier/osbuilder/tree/add_resource_limits_to_osbuilder_images/api/v1alpha3"
+	"github.com/ndlanier/osbuilder/tree/add_resource_limits_to_osbuilder_images/controllers"
 	//+kubebuilder:scaffold:imports
 )
 
