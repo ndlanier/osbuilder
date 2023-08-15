@@ -318,6 +318,14 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.memory)
 	}
 
+	if artifact.Spec.Resources.Requests.cpu {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.cpu)
+	}
+
+	if artifact.Spec.Resources.Requests.memory {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.memory)
+	}
+
 	for i, bundle := range artifact.Spec.Bundles {
 		podSpec.InitContainers = append(podSpec.InitContainers, unpackContainer(fmt.Sprint(i), r.ToolImage, bundle))
 	}
