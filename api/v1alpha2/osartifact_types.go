@@ -46,6 +46,10 @@ type OSArtifactSpec struct {
 	ImagePullSecrets []corev1.LocalObjectReference     `json:"imagePullSecrets,omitempty"`
 	Exporters        []batchv1.JobSpec                 `json:"exporters,omitempty"`
 	Volume           *corev1.PersistentVolumeClaimSpec `json:"volume,omitempty"`
+
+	//Resource Limiters for pods
+	limitsCPU 		string	`json:"limits.cpu,omitempty"`
+	limitsMemory	string	`json:"limits.memory,omitempty"`
 }
 
 type SecretKeySelector struct {
