@@ -19,7 +19,7 @@ package controllers
 import (
 	"context"
 	"fmt"
-	osbuilder "github.com/kairos-io/osbuilder/api/v1alpha2"
+	osbuilder "github.com/ndlanier/osbuilder/api/v1alpha3"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

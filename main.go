@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	buildv1alpha2 "github.com/kairos-io/osbuilder/api/v1alpha2"
+	buildv1alpha3 "github.com/ndlanier/osbuilder/api/v1alpha3"
 	"github.com/kairos-io/osbuilder/controllers"
 	//+kubebuilder:scaffold:imports
 )
@@ -44,7 +44,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(buildv1alpha2.AddToScheme(scheme))
+	utilruntime.Must(buildv1alpha3.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

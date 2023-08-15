@@ -21,7 +21,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	osbuilder "github.com/kairos-io/osbuilder/api/v1alpha2"
+	osbuilder "github.com/ndlanier/testing/kairos/osbuilder/api/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
 )
 

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha2
+package v1alpha3
 
 import (
 	batchv1 "k8s.io/api/batch/v1"
@@ -47,9 +47,20 @@ type OSArtifactSpec struct {
 	Exporters        []batchv1.JobSpec                 `json:"exporters,omitempty"`
 	Volume           *corev1.PersistentVolumeClaimSpec `json:"volume,omitempty"`
 
+	Resources	Resources	`json:"resources,omitempty"`
+}
+
+type Resources struct {
 	//Resource Limiters for pods
-	limitsCPU 		string	`json:"limits.cpu,omitempty"`
-	limitsMemory	string	`json:"limits.memory,omitempty"`
+	Limits 		CPU_MEM	`json:"limits,omitempty"`
+
+	//Resource Requests for pods
+	Requests 	CPU_MEM	`json:"requests,omitempty"`
+}
+
+type CPU_MEM struct {
+	cpu		string	`json:"cpu,omitempty"`
+	memory	string	`json:"memory,omitempty"`
 }
 
 type SecretKeySelector struct {

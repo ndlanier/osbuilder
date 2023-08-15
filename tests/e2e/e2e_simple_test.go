@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	osbuilder "github.com/kairos-io/osbuilder/api/v1alpha2"
+	osbuilder "github.com/ndlanier/osbuilder/api/v1alpha3"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	batchv1 "k8s.io/api/batch/v1"
