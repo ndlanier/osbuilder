@@ -18,6 +18,7 @@ package controllers
 
 import (
 	"fmt"
+
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -310,20 +311,20 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 
 	podSpec.InitContainers = []corev1.Container{unpackContainer("baseimage", r.ToolImage, artifact.Spec.ImageName)}
 
-	if artifact.Spec.Resources.Limits.cpu {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.cpu)
+	if artifact.Spec.Resources.Limits.Cpu {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.Cpu)
 	}
 
-	if artifact.Spec.Resources.Limits.memory {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.memory)
+	if artifact.Spec.Resources.Limits.Memory {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.Memory)
 	}
 
-	if artifact.Spec.Resources.Requests.cpu {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.cpu)
+	if artifact.Spec.Resources.Requests.Cpu {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.Cpu)
 	}
 
-	if artifact.Spec.Resources.Requests.memory {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.memory)
+	if artifact.Spec.Resources.Requests.Memory {
+		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.Memory)
 	}
 
 	for i, bundle := range artifact.Spec.Bundles {
