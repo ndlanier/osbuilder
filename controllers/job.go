@@ -24,6 +24,11 @@ import (
 
 	osbuilder "github.com/ndlanier/osbuilder/tree/add_resource_limits_to_osbuilder_images/api/v1alpha3"
 	corev1 "k8s.io/api/core/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+)
+
+var (
+	job_setupLog = ctrl.Log.WithName("job_setup")
 )
 
 func unpackContainer(id, containerImage, pullImage string) corev1.Container {
@@ -179,6 +184,73 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 		)
 	}
 
+	nullQty := resource.Quantity{}
+
+	var CpuLimits = nullQty
+	var MemoryLimits = nullQty
+	var CpuReq = nullQty
+	var MemoryReq = nullQty
+	var err error
+
+	if artifact.Spec.Resources.Limits.Cpu != "" {
+		CpuLimits, err = resource.ParseQuantity(artifact.Spec.Resources.Limits.Cpu)
+		if err != nil {
+			job_setupLog.Error(err, "Invalid CPU Limit")
+			CpuLimits = nullQty
+		}
+	}
+	if artifact.Spec.Resources.Limits.Memory != "" {
+		MemoryLimits, err = resource.ParseQuantity(artifact.Spec.Resources.Limits.Memory)
+		if err != nil {
+			job_setupLog.Error(err, "Invalid Memory Limit")
+			MemoryLimits = nullQty
+		}
+	}
+	if artifact.Spec.Resources.Requests.Cpu != "" {
+		CpuReq, err = resource.ParseQuantity(artifact.Spec.Resources.Requests.Cpu)
+		if err != nil {
+			job_setupLog.Error(err, "Invalid CPU Requests")
+			CpuReq = nullQty
+		}
+	}
+	if artifact.Spec.Resources.Requests.Memory != "" {
+		MemoryReq, err = resource.ParseQuantity(artifact.Spec.Resources.Requests.Memory)
+		if err != nil {
+			job_setupLog.Error(err, "Invalid Memory Requests")
+			MemoryReq = nullQty
+		}
+	}
+
+	fmt.Print(CpuLimits)
+	fmt.Print(MemoryLimits)
+	fmt.Print(CpuReq)
+	fmt.Print(MemoryReq)
+	// job_setupLog.Info("CPU Limits: " + fmt.CpuLimits.Format())
+	// job_setupLog.Info("Memory Limits: " + MemoryLimits.Format())
+	// job_setupLog.Info("CPU Requests: " + CpuReq.Format())
+	// job_setupLog.Info("Memory Requests: " + MemoryReq.Format())
+
+	var containerLimits corev1.ResourceList
+	var containerReq corev1.ResourceList
+
+	if CpuLimits != nullQty && MemoryLimits != nullQty {
+		containerLimits = corev1.ResourceList{
+			corev1.ResourceCPU:    CpuLimits,
+			corev1.ResourceMemory: MemoryLimits,
+		}
+	}
+	if CpuReq != nullQty && MemoryReq != nullQty {
+		containerReq = corev1.ResourceList{
+			corev1.ResourceCPU:    CpuReq,
+			corev1.ResourceMemory: MemoryReq,
+		}
+	}
+
+	containerResources := corev1.ResourceRequirements{
+		Limits:   containerLimits,
+		Requests: containerReq,
+	}
+
 	buildIsoContainer := corev1.Container{
 		ImagePullPolicy: corev1.PullAlways,
 		SecurityContext: &corev1.SecurityContext{Privileged: ptr(true)},
@@ -196,8 +268,8 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 		SecurityContext: &corev1.SecurityContext{Privileged: ptr(true)},
 		Name:            "build-cloud-image",
 		Image:           r.ToolImage,
-
-		Command: []string{"/bin/bash", "-cxe"},
+		Resources:       containerResources,
+		Command:         []string{"/bin/bash", "-cxe"},
 		Args: []string{
 			cloudImgCmd,
 		},
@@ -310,22 +382,6 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 	}
 
 	podSpec.InitContainers = []corev1.Container{unpackContainer("baseimage", r.ToolImage, artifact.Spec.ImageName)}
-
-	if artifact.Spec.Resources.Limits.Cpu {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.Cpu)
-	}
-
-	if artifact.Spec.Resources.Limits.Memory {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Limits.Memory)
-	}
-
-	if artifact.Spec.Resources.Requests.Cpu {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.Cpu)
-	}
-
-	if artifact.Spec.Resources.Requests.Memory {
-		podSpec.Containers = append(podSpec.Containers, artifact.Spec.Resources.Requests.Memory)
-	}
 
 	for i, bundle := range artifact.Spec.Bundles {
 		podSpec.InitContainers = append(podSpec.InitContainers, unpackContainer(fmt.Sprint(i), r.ToolImage, bundle))
