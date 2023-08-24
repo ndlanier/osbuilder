@@ -187,7 +187,7 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 			artifact.Name,
 		)
 
-		cloudImgCmd += " /iso/iso-overlay/grub2/grub.cfg"
+		cloudImgCmd += " /iso/iso-overlay/boot/grub2/grub.cfg"
 	}
 
 	nullQty := resource.Quantity{}
