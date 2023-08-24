@@ -177,11 +177,17 @@ func (r *OSArtifactReconciler) newBuilderPod(pvcName string, artifact *osbuilder
 		cloudImgCmd += " /iso/iso-overlay/cloud_config.yaml"
 	}
 
+	if artifact.Spec.GRUBDefaultMenuEntry != "" {
+		cloudImgCmd += " " + artifact.Spec.GRUBDefaultMenuEntry
+	}
+
 	if artifact.Spec.CloudConfigRef != nil || artifact.Spec.GRUBConfig != "" {
 		cmd = fmt.Sprintf(
 			"/entrypoint.sh --debug --name %s build-iso --date=false --overlay-iso /iso/iso-overlay --output /artifacts dir:/rootfs",
 			artifact.Name,
 		)
+
+		cloudImgCmd += " /iso/iso-overlay/grub2/grub.cfg"
 	}
 
 	nullQty := resource.Quantity{}

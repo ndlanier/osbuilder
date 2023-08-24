@@ -40,6 +40,9 @@ type OSArtifactSpec struct {
 	CloudConfigRef *SecretKeySelector `json:"cloudConfigRef,omitempty"`
 	GRUBConfig     string             `json:"grubConfig,omitempty"`
 
+	//Override Default Grub Menu Entry Name
+	GRUBDefaultMenuEntry string `json:"grubDefaultMenuEntry,omitempty"`
+
 	Bundles   []string `json:"bundles,omitempty"`
 	OSRelease string   `json:"osRelease,omitempty"`
 

@@ -14,7 +14,9 @@
 
 DIRECTORY=$1
 OUT=${2:-disk.raw}
-CONFIG=$3
+CLOUD_CONFIG=$3
+GRUB_MENU_OVERRIDE=$4
+GRUB_CONFIG=$5
 
 echo "Output: $OUT"
 
@@ -32,7 +34,7 @@ echo "Generating squashfs from $DIRECTORY"
 mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
 mv recovery.squashfs /build/root/cOS/recovery.squashfs
 
-grub2-editenv /build/root/grub_oem_env set "default_menu_entry=Kairos"
+grub2-editenv /build/root/grub_oem_env set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
 
 # Create a 2GB filesystem for RECOVERY including the contents for root (grub config and squasfs container)
 # shellcheck disable=SC2004
@@ -48,9 +50,13 @@ mcopy -s -i efi.part /build/efi/EFI ::EFI
 # Create the grubenv forcing first boot to be on recovery system
 mkdir -p /build/oem
 cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
-if [ -n "$CONFIG" ]; then
-  echo "Copying config file ($CONFIG)"
-  cp $CONFIG /build/oem
+if [ -n "$CLOUD_CONFIG" ]; then
+  echo "Copying config file ($CLOUD_CONFIG)"
+  cp $CLOUD_CONFIG /build/oem
+fi
+if [ -n "$GRUB_CONFIG"]; then
+  echo "Copying GRUB config file ($GRUB_CONFIG)"
+  CP $GRUB_CONFIG /build/root/etc/cos/
 fi
 
 # Create a 64MB filesystem for OEM volume

@@ -7833,6 +7833,9 @@ spec:
                 type: boolean
               grubConfig:
                 type: string
+              grubDefaultMenuEntry:
+                description: Override Default Grub Menu Entry Name
+                type: string
               imageName:
                 type: string
               imagePullSecrets:
