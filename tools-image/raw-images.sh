@@ -34,7 +34,11 @@ cp -rf /raw/grubconfig/* /build/root
 cp -rf /raw/grubartifacts/* /build/root/grub2
 if [ -n "$GRUB_CONFIG" ]; then
   echo "Copying GRUB config file ($GRUB_CONFIG)"
-  cp $GRUB_CONFIG /build/root/etc/cos/
+  cp $GRUB_CONFIG /build/efi
+  cp $GRUB_CONFIG /build/efi/boot
+  cp $GRUB_CONFIG /build/root
+  cp $GRUB_CONFIG /build/root/etc/cos
+  cp $GRUB_CONFIG /build/root/grub2
 fi
 
 echo "Generating squashfs from $DIRECTORY"
