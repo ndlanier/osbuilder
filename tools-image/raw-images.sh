@@ -32,6 +32,10 @@ mkdir /build/efi
 cp -rf /raw/grub/* /build/efi
 cp -rf /raw/grubconfig/* /build/root
 cp -rf /raw/grubartifacts/* /build/root/grub2
+if [ -n "$GRUB_CONFIG" ]; then
+  echo "Copying GRUB config file ($GRUB_CONFIG)"
+  cp $GRUB_CONFIG /build/root/etc/cos/
+fi
 
 echo "Generating squashfs from $DIRECTORY"
 mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
@@ -56,10 +60,6 @@ cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
 if [ -n "$CLOUD_CONFIG" ]; then
   echo "Copying config file ($CLOUD_CONFIG)"
   cp $CLOUD_CONFIG /build/oem
-fi
-if [ -n "$GRUB_CONFIG" ]; then
-  echo "Copying GRUB config file ($GRUB_CONFIG)"
-  cp $GRUB_CONFIG /build/root/etc/cos/
 fi
 
 # Create a 64MB filesystem for OEM volume
