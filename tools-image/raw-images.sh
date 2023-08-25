@@ -19,6 +19,9 @@ GRUB_MENU_OVERRIDE=$4
 GRUB_CONFIG=$5
 
 echo "Output: $OUT"
+echo "Cloud Config: $CLOUD_CONFIG"
+echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
+echo "Grub Config: $GRUB_CONFIG"
 
 set -e
 
@@ -54,9 +57,9 @@ if [ -n "$CLOUD_CONFIG" ]; then
   echo "Copying config file ($CLOUD_CONFIG)"
   cp $CLOUD_CONFIG /build/oem
 fi
-if [ -n "$GRUB_CONFIG"]; then
+if [ -n "$GRUB_CONFIG" ]; then
   echo "Copying GRUB config file ($GRUB_CONFIG)"
-  CP $GRUB_CONFIG /build/root/etc/cos/
+  cp $GRUB_CONFIG /build/root/etc/cos/
 fi
 
 # Create a 64MB filesystem for OEM volume
