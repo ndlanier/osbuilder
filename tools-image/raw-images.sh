@@ -45,7 +45,11 @@ echo "Generating squashfs from $DIRECTORY"
 mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
 mv recovery.squashfs /build/root/cOS/recovery.squashfs
 
-grub2-editenv /build/root/grub_oem_env set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
+if [-n "$GRUB_MENU_OVERRIDE"]; then
+  grub2-editenv /build/root/grub_oem_env set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
+else
+  grub2-editenv /build/root/grub_oem_env set "default_menu_entry=Kairos"
+fi
 
 # Create a 2GB filesystem for RECOVERY including the contents for root (grub config and squasfs container)
 # shellcheck disable=SC2004
