@@ -108,6 +108,7 @@ COPY ./gce.sh /gce.sh
 COPY ./raw-images.sh /raw-images.sh
 COPY ./azure.sh /azure.sh
 COPY ./netboot.sh /netboot.sh
+RUN sed -i 's/\r$//' /raw-images.sh
 
 COPY defaults.yaml /defaults.yaml
 
