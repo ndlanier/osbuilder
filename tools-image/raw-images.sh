@@ -34,16 +34,14 @@ cp -rf /raw/grubconfig/* /build/root
 cp -rf /raw/grubartifacts/* /build/root/grub2
 if [ -n "$GRUB_CONFIG" ]; then
   echo "Copying GRUB config file ($GRUB_CONFIG)"
-  cp $GRUB_CONFIG /build/efi
-  cp $GRUB_CONFIG /build/efi/boot
-  cp $GRUB_CONFIG /build/root
-  cp $GRUB_CONFIG /build/root/etc/cos
+  # cp $GRUB_CONFIG /build/root
+  # cp $GRUB_CONFIG /build/root/etc/cos
   cp $GRUB_CONFIG /build/root/grub2
 fi
 
 echo "Generating squashfs from $DIRECTORY"
-mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
-mv recovery.squashfs /build/root/cOS/recovery.squashfs
+mksquashfs $DIRECTORY rootfs.squashfs -b 1024k -comp xz -Xbcj x86
+mv rootfs.squashfs /build/root/cOS/rootfs.squashfs
 
 if [-n "$GRUB_MENU_OVERRIDE"]; then
   grub2-editenv /build/root/grub_oem_env set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
@@ -63,23 +61,23 @@ mkfs.fat -F16 -n COS_GRUB efi.part
 mcopy -s -i efi.part /build/efi/EFI ::EFI
 
 # Create the grubenv forcing first boot to be on recovery system
-mkdir -p /build/oem
-cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
+# mkdir -p /build/oem
+# cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
 if [ -n "$CLOUD_CONFIG" ]; then
   echo "Copying config file ($CLOUD_CONFIG)"
-  cp $CLOUD_CONFIG /build/oem
+  cp $CLOUD_CONFIG /build/root/config.yaml
 fi
 
 # Create a 64MB filesystem for OEM volume
-truncate -s $((64*1024*1024)) oem.part
-mkfs.ext2 -L "${OEM_LABEL}" -d /build/oem oem.part
+# truncate -s $((64*1024*1024)) oem.part
+# mkfs.ext2 -L "${OEM_LABEL}" -d /build/oem oem.part
 
 echo "Generating image $OUT"
 # Create disk image, add 3MB of initial free space to disk, 1MB is for proper alignement, 2MB are for the hybrid legacy boot.
 truncate -s $((3*1024*1024)) $OUT
 {
     cat efi.part
-    cat oem.part
+    # cat oem.part
     cat rootfs.part
 } >> $OUT
 
@@ -93,6 +91,6 @@ fi
 
 # Create the partition table in $OUT (assumes sectors of 512 bytes)
 sgdisk -n 1:2048:+2M -c 1:legacy -t 1:EF02 $OUT
-sgdisk -n 2:0:+20M -c 2:UEFI -t 2:EF00 $OUT
-sgdisk -n 3:0:+64M -c 3:oem -t 3:8300 $OUT
-sgdisk -n 4:0:+${RECOVERY_SIZE}M -c 4:root -t 4:8300 $OUT
+# sgdisk -n 2:0:+20M -c 2:UEFI -t 2:EF00 $OUT
+sgdisk -n 2:0:+64M -c 3:oem -t 3:8300 $OUT
+sgdisk -n 3:0:+${RECOVERY_SIZE}M -c 4:root -t 4:8300 $OUT
