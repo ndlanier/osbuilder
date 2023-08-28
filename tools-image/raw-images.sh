@@ -23,15 +23,19 @@ echo "Cloud Config: $CLOUD_CONFIG"
 echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
 echo "Grub Config: $GRUB_CONFIG"
 
+rootdir=$(ls -lh)
+artifactdir=$(ls -lh /artifacts/)
+rootfsdir=$(ls -lh /rootfs/)
+
 echo "Debug Information --------------------------------"
 echo "Root Directory"
-echo ${ls -lh}
+echo $rootdir
 echo "===="
 echo "artifacts dir"
-echo ${ls -lh /artifacts/}
+echo $artifactdir
 echo "===="
 echo "rootfs dir"
-echo ${ls -lh /rootfs/}
+echo $rootfsdir
 echo "--------------------------------------------------"
 set -e
 
