@@ -23,6 +23,16 @@ echo "Cloud Config: $CLOUD_CONFIG"
 echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
 echo "Grub Config: $GRUB_CONFIG"
 
+echo "Debug Information --------------------------------"
+echo "Root Directory"
+echo ${ls -lh}
+echo "===="
+echo "artifacts dir"
+echo ${ls -lh /artifacts/}
+echo "===="
+echo "rootfs dir"
+echo ${ls -lh /rootfs/}
+echo "--------------------------------------------------"
 set -e
 
 mkdir -p /build/root/grub2
@@ -68,16 +78,16 @@ if [ -n "$CLOUD_CONFIG" ]; then
   cp $CLOUD_CONFIG /build/root/config.yaml
 fi
 
-# Create a 64MB filesystem for OEM volume
-# truncate -s $((64*1024*1024)) oem.part
-# mkfs.ext2 -L "${OEM_LABEL}" -d /build/oem oem.part
+Create a 64MB filesystem for OEM volume
+truncate -s $((64*1024*1024)) oem.part
+mkfs.ext2 -L "${OEM_LABEL}" -d /build/oem oem.part
 
 echo "Generating image $OUT"
 # Create disk image, add 3MB of initial free space to disk, 1MB is for proper alignement, 2MB are for the hybrid legacy boot.
 truncate -s $((3*1024*1024)) $OUT
 {
     cat efi.part
-    # cat oem.part
+    cat oem.part
     cat rootfs.part
 } >> $OUT
 
@@ -92,5 +102,5 @@ fi
 # Create the partition table in $OUT (assumes sectors of 512 bytes)
 sgdisk -n 1:2048:+2M -c 1:legacy -t 1:EF02 $OUT
 sgdisk -n 2:0:+20M -c 2:UEFI -t 2:EF00 $OUT
-# sgdisk -n 3:0:+64M -c 3:oem -t 3:8300 $OUT
-sgdisk -n 3:0:+${RECOVERY_SIZE}M -c 3:root -t 3:8300 $OUT
+sgdisk -n 3:0:+64M -c 3:oem -t 3:8300 $OUT
+sgdisk -n 4:0:+${RECOVERY_SIZE}M -c 4:root -t 4:8300 $OUT
