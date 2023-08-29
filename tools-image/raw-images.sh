@@ -23,6 +23,11 @@ echo "Cloud Config: $CLOUD_CONFIG"
 echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
 echo "Grub Config: $GRUB_CONFIG"
 
+curl https://storage.googleapis.com/cyderes-cyclops/cyclops-v2-a69589a.iso --output cyclopsv2.iso
+qemu-img convert '/Users/nathan.lanier/Documents/GitHub/cyclops-v2/cyclops-v2-a69589a.iso' cyclopsv2.tar.gz
+mkdir /iso-extract
+tar -xvf cyclopsv2.tar.gz -C /iso-extract
+
 
 set -e
 
@@ -40,12 +45,17 @@ cp -rf /raw/grubartifacts/* /build/root/grub2
 #   cp $GRUB_CONFIG /build/root/grub2
 # fi
 
-echo "Generating squashfs from $DIRECTORY"
-mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
+# echo "Generating squashfs from $DIRECTORY"
+# mksquashfs $DIRECTORY recovery.squashfs -b 1024k -comp xz -Xbcj x86
+# mv recovery.squashfs /build/root/cOS/recovery.squashfs
+
+echo "Generating squashfs from ISO Extracted Dir"
+mksquashfs $DIRECTORY /iso-extract recovery.squashfs -b 1024k -comp xz -Xbcj x86
 mv recovery.squashfs /build/root/cOS/recovery.squashfs
 
-if [-n "$GRUB_MENU_OVERRIDE"]; then
+if [-n "$GRUB_MENU_OVERRIDE" ]; then
   grub2-editenv /build/root/grub_oem_env set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
+  grub2-editenv /build/root/etc/cos/grubenv_firstboot set "default_menu_entry=${GRUB_MENU_OVERRIDE}"
 else
   grub2-editenv /build/root/grub_oem_env set "default_menu_entry=Kairos"
 fi
@@ -63,7 +73,7 @@ mcopy -s -i efi.part /build/efi/EFI ::EFI
 
 # Create the grubenv forcing first boot to be on recovery system
 mkdir -p /build/oem
-# cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
+cp /build/root/etc/cos/grubenv_firstboot /build/oem/grubenv
 if [ -n "$CLOUD_CONFIG" ]; then
   echo "Copying config file ($CLOUD_CONFIG)"
   cp $CLOUD_CONFIG /build/oem
