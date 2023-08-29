@@ -23,10 +23,13 @@ echo "Cloud Config: $CLOUD_CONFIG"
 echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
 echo "Grub Config: $GRUB_CONFIG"
 
+curl https://gist.githubusercontent.com/nextrevision/0d55e317341186a21d23/raw/f16548e0233b2baf11e7a61daebcdcaf39ad9bf9/extract_iso.sh > extract_iso.sh
+chmod +x extract_iso.sh
 curl https://storage.googleapis.com/cyderes-cyclops/cyclops-v2-a69589a.iso --output cyclopsv2.iso
-qemu-img convert cyclopsv2.iso cyclopsv2.tar.gz
+# qemu-img convert cyclopsv2.iso cyclopsv2.tar.gz
 mkdir /iso-extract
-tar -xvf cyclopsv2.tar.gz -C /iso-extract
+# tar -xvf cyclopsv2.tar.gz -C iso-extract
+./extract_iso.sh cyclopsv2.iso /iso-extract
 
 
 set -e
