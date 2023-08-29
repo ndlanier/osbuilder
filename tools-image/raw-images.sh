@@ -24,7 +24,7 @@ echo "Grub Default Menu Optione Name: $GRUB_MENU_OVERRIDE"
 echo "Grub Config: $GRUB_CONFIG"
 
 curl https://storage.googleapis.com/cyderes-cyclops/cyclops-v2-a69589a.iso --output cyclopsv2.iso
-qemu-img convert '/Users/nathan.lanier/Documents/GitHub/cyclops-v2/cyclops-v2-a69589a.iso' cyclopsv2.tar.gz
+qemu-img convert cyclopsv2.iso cyclopsv2.tar.gz
 mkdir /iso-extract
 tar -xvf cyclopsv2.tar.gz -C /iso-extract
 
