@@ -53,7 +53,7 @@ cp -rf /raw/grubartifacts/* /build/root/grub2
 # mv recovery.squashfs /build/root/cOS/recovery.squashfs
 
 echo "Generating squashfs from ISO Extracted Dir"
-mksquashfs $DIRECTORY /iso-extract recovery.squashfs -b 1024k -comp xz -Xbcj x86
+mksquashfs /iso-extract recovery.squashfs -b 1024k -comp xz -Xbcj x86
 mv recovery.squashfs /build/root/cOS/recovery.squashfs
 
 if [-n "$GRUB_MENU_OVERRIDE" ]; then
